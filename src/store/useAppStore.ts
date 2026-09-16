@@ -91,14 +91,16 @@ export const useAppStore = create<AppState>()(
           const newTotal = state.stats.totalFocusSeconds + (isFocus ? session.actualDuration : 0);
 
           // Simple streak logic (could be improved with date checking)
-          const today = new Date().toISOString().split('T')[0];
+          // Use local date string instead of UTC to avoid streak resets at wrong local time
+          const now = new Date();
+          const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().split('T')[0];
           let { currentStreakDays, longestStreakDays, lastActiveDate } = state.stats;
 
           if (isFocus && session.actualDuration > 0) {
               if (lastActiveDate !== today) {
                   const yesterday = new Date();
                   yesterday.setDate(yesterday.getDate() - 1);
-                  const yesterdayStr = yesterday.toISOString().split('T')[0];
+                  const yesterdayStr = new Date(yesterday.getTime() - yesterday.getTimezoneOffset() * 60000).toISOString().split('T')[0];
 
                   if (lastActiveDate === yesterdayStr) {
                       currentStreakDays++;
