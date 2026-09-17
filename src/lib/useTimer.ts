@@ -11,9 +11,11 @@ export function useTimer() {
     pausedAt,
     accumulatedPausedTime,
     expectedEndTime,
+    activeTaskId,
     setTimerState,
     resetTimer,
     addSession,
+    updateTaskFocusTime,
   } = useAppStore();
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
@@ -49,7 +51,12 @@ export function useTimer() {
         startedAt,
         endedAt: now,
         completed: true,
+        taskId: activeTaskId || undefined,
     });
+
+    if (timerPhase === 'focus' && activeTaskId) {
+        updateTaskFocusTime(activeTaskId, plannedDuration);
+    }
 
     // Determine next phase
     let nextPhase: TimerPhase = 'focus';
@@ -72,15 +79,33 @@ export function useTimer() {
         }
     }
 
-    setTimerState({
-        timerPhase: nextPhase,
-        timerStatus: 'idle',
-        currentCycle: nextCycle,
-        startedAt: null,
-        pausedAt: null,
-        accumulatedPausedTime: 0,
-        expectedEndTime: null,
-    });
+    // Handle Auto-start logic
+    const shouldAutoStart =
+        (nextPhase === 'focus' && settings.autoStartFocus) ||
+        (nextPhase !== 'focus' && settings.autoStartBreaks);
+
+    if (shouldAutoStart) {
+        const durationMs = getPhaseDuration(nextPhase) * 1000;
+        setTimerState({
+            timerPhase: nextPhase,
+            timerStatus: 'running',
+            currentCycle: nextCycle,
+            startedAt: Date.now(),
+            pausedAt: null,
+            accumulatedPausedTime: 0,
+            expectedEndTime: Date.now() + durationMs,
+        });
+    } else {
+        setTimerState({
+            timerPhase: nextPhase,
+            timerStatus: 'idle',
+            currentCycle: nextCycle,
+            startedAt: null,
+            pausedAt: null,
+            accumulatedPausedTime: 0,
+            expectedEndTime: null,
+        });
+    }
 
     // Optional: Play sound or notification here
     if (Notification.permission === 'granted') {
@@ -88,7 +113,7 @@ export function useTimer() {
            body: timerPhase === 'focus' ? 'Time for a break!' : 'Time to focus!',
        });
     }
-  }, [startedAt, timerPhase, getPhaseDuration, currentCycle, settings.cyclesBeforeLongBreak, addSession, setTimerState]);
+  }, [startedAt, timerPhase, getPhaseDuration, currentCycle, settings.cyclesBeforeLongBreak, settings.autoStartFocus, settings.autoStartBreaks, addSession, setTimerState, activeTaskId, updateTaskFocusTime]);
 
   // Main tick loop
   useEffect(() => {
@@ -152,19 +177,25 @@ export function useTimer() {
       if (timerStatus !== 'idle' && startedAt) {
           const now = Date.now();
           const actualDuration = Math.floor((now - startedAt - accumulatedPausedTime) / 1000);
+          const finalDuration = Math.max(0, actualDuration);
 
           addSession({
               id: crypto.randomUUID(),
               type: timerPhase,
               plannedDuration: getPhaseDuration(timerPhase),
-              actualDuration: Math.max(0, actualDuration),
+              actualDuration: finalDuration,
               startedAt,
               endedAt: now,
               completed: false,
+              taskId: activeTaskId || undefined,
           });
+
+          if (timerPhase === 'focus' && activeTaskId) {
+              updateTaskFocusTime(activeTaskId, finalDuration);
+          }
       }
       resetTimer();
-  }, [timerStatus, startedAt, accumulatedPausedTime, timerPhase, getPhaseDuration, addSession, resetTimer]);
+  }, [timerStatus, startedAt, accumulatedPausedTime, timerPhase, getPhaseDuration, addSession, resetTimer, activeTaskId, updateTaskFocusTime]);
 
 
 
@@ -176,16 +207,22 @@ export function useTimer() {
       if (timerStatus !== 'idle' && startedAt) {
           const now = Date.now();
           const actualDuration = Math.floor((now - startedAt - accumulatedPausedTime) / 1000);
+          const finalDuration = Math.max(0, actualDuration);
 
           addSession({
               id: crypto.randomUUID(),
               type: timerPhase,
               plannedDuration: getPhaseDuration(timerPhase),
-              actualDuration: Math.max(0, actualDuration),
+              actualDuration: finalDuration,
               startedAt,
               endedAt: now,
               completed: false, // marked as false because skipped
+              taskId: activeTaskId || undefined,
           });
+
+          if (timerPhase === 'focus' && activeTaskId) {
+              updateTaskFocusTime(activeTaskId, finalDuration);
+          }
       }
 
       // Determine next phase (same logic as complete, just code duplication can be cleaned up)
@@ -216,7 +253,7 @@ export function useTimer() {
           expectedEndTime: null,
       });
 
-  }, [timerStatus, startedAt, accumulatedPausedTime, timerPhase, getPhaseDuration, addSession, currentCycle, settings.cyclesBeforeLongBreak, setTimerState]);
+  }, [timerStatus, startedAt, accumulatedPausedTime, timerPhase, getPhaseDuration, addSession, currentCycle, settings.cyclesBeforeLongBreak, setTimerState, activeTaskId, updateTaskFocusTime]);
 
   // Request Notification permission
   useEffect(() => {

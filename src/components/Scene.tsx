@@ -1,4 +1,4 @@
-import { type TimerStatus, type TimerPhase } from '../store/useAppStore';
+import { type TimerStatus, type TimerPhase, useAppStore } from '../store/useAppStore';
 
 interface SceneProps {
   status: TimerStatus;
@@ -6,11 +6,33 @@ interface SceneProps {
 }
 
 export function Scene({ status, phase }: SceneProps) {
+  const { stats } = useAppStore();
+
   // Determine if we are focusing
   const isFocusing = phase === 'focus';
   const isChopping = isFocusing && status === 'running';
   const isPaused = status === 'paused';
   const isResting = !isFocusing;
+
+  // Calculate wood progression
+  // 1 log per 25 minutes of focus time
+  const totalLogs = Math.floor(stats.totalFocusSeconds / (25 * 60));
+
+  // Progression Logic:
+  // Clearing: 0–4 logs
+  // Campsite: 5–19 logs
+  // Cabin: 20–49 logs
+  // Homestead: 50–119 logs
+  // Village: 120+ logs
+  const getStage = () => {
+    if (totalLogs >= 120) return 'Village';
+    if (totalLogs >= 50) return 'Homestead';
+    if (totalLogs >= 20) return 'Cabin';
+    if (totalLogs >= 5) return 'Campsite';
+    return 'Clearing';
+  };
+
+  const stage = getStage();
 
   // Base background class determined by phase
   const backgroundClass = isFocusing ? 'bg-dusk-gradient' : 'bg-night-gradient';
@@ -41,7 +63,73 @@ export function Scene({ status, phase }: SceneProps) {
 
       <div className="relative z-10 flex items-end justify-center w-full h-full pb-6">
 
-        {/* --- Environmental Props Placeholder --- */}
+        {/* --- Environmental Props / Village Progression Placeholder --- */}
+
+        {/* Village Progression Render */}
+        <div className="absolute bottom-6 left-8 flex items-end">
+          {stage === 'Clearing' && (
+             <div className="flex flex-col items-center opacity-60">
+                <div className="w-8 h-2 bg-storybook-forest-dark/30 rounded-full" />
+                <span className="text-[10px] font-bold text-storybook-forest-dark mt-1">Clearing</span>
+             </div>
+          )}
+          {stage === 'Campsite' && (
+             <div className="flex flex-col items-center">
+                {/* Tent placeholder */}
+                <div className="w-0 h-0 border-l-[16px] border-l-transparent border-b-[24px] border-b-storybook-rust-base border-r-[16px] border-r-transparent relative">
+                   <div className="absolute top-[8px] -left-[4px] w-0 h-0 border-l-[4px] border-l-transparent border-b-[16px] border-b-storybook-forest-dark border-r-[4px] border-r-transparent" />
+                </div>
+                <span className="text-[10px] font-bold text-storybook-forest-dark mt-1 bg-white/50 px-1 rounded">Campsite</span>
+             </div>
+          )}
+          {stage === 'Cabin' && (
+             <div className="flex flex-col items-center">
+                {/* Cabin placeholder */}
+                <div className="w-20 h-16 bg-storybook-wood border-2 border-storybook-forest-dark rounded-sm relative flex flex-col justify-end items-center pb-2">
+                   <div className="absolute -top-6 -left-2 w-24 h-6 bg-storybook-rust-base border-2 border-storybook-forest-dark rounded-sm" />
+                   <div className="w-4 h-6 bg-storybook-forest-dark rounded-t-sm" />
+                </div>
+                <span className="text-[10px] font-bold text-storybook-forest-dark mt-1 bg-white/50 px-1 rounded">Cabin</span>
+             </div>
+          )}
+          {stage === 'Homestead' && (
+             <div className="flex flex-col items-center">
+                {/* Homestead placeholder */}
+                <div className="flex items-end">
+                  <div className="w-12 h-10 bg-storybook-rust-light border-2 border-storybook-forest-dark rounded-sm mb-0 -mr-2 relative z-0">
+                      <div className="absolute -top-4 -left-1 w-14 h-4 bg-storybook-rust-base border-2 border-storybook-forest-dark rounded-sm" />
+                  </div>
+                  <div className="w-24 h-20 bg-storybook-wood border-2 border-storybook-forest-dark rounded-sm relative z-10 flex justify-center items-end pb-2">
+                    <div className="absolute -top-8 -left-2 w-28 h-8 bg-storybook-rust-base border-2 border-storybook-forest-dark rounded-sm" />
+                    <div className="w-6 h-8 bg-storybook-forest-dark rounded-t-sm" />
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-storybook-forest-dark mt-1 bg-white/50 px-1 rounded">Homestead</span>
+             </div>
+          )}
+          {stage === 'Village' && (
+             <div className="flex flex-col items-center">
+                {/* Village placeholder */}
+                <div className="flex items-end gap-2">
+                  <div className="w-16 h-12 bg-storybook-wood border-2 border-storybook-forest-dark rounded-sm relative flex justify-center items-end pb-1">
+                    <div className="absolute -top-6 -left-1 w-18 h-6 bg-storybook-rust-base border-2 border-storybook-forest-dark rounded-sm" />
+                    <div className="w-4 h-6 bg-storybook-forest-dark rounded-t-sm" />
+                  </div>
+                  <div className="w-24 h-20 bg-storybook-wood border-2 border-storybook-forest-dark rounded-sm relative flex justify-center items-end pb-2">
+                    <div className="absolute -top-8 -left-2 w-28 h-8 bg-storybook-rust-base border-2 border-storybook-forest-dark rounded-sm" />
+                    <div className="w-6 h-8 bg-storybook-forest-dark rounded-t-sm" />
+                  </div>
+                  <div className="w-20 h-16 bg-storybook-wood border-2 border-storybook-forest-dark rounded-sm relative flex justify-center items-end pb-2">
+                    <div className="absolute -top-6 -left-2 w-24 h-6 bg-storybook-rust-base border-2 border-storybook-forest-dark rounded-sm" />
+                    <div className="w-4 h-6 bg-storybook-forest-dark rounded-t-sm" />
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-storybook-forest-dark mt-1 bg-white/50 px-1 rounded">Village</span>
+             </div>
+          )}
+        </div>
+
+        {/* Focus Target Tree */}
         {isFocusing && (
           <div className="relative mr-8">
              {/* Standing Tree Placeholder (Replace with 'Standing tree' vector) */}

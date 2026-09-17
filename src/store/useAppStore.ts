@@ -9,6 +9,18 @@ export interface UserSettings {
   shortBreakDuration: number;
   longBreakDuration: number;
   cyclesBeforeLongBreak: number;
+  audioVolume: number;
+  selectedAudio: 'none' | 'forest' | 'campfire' | 'rain';
+  autoStartBreaks: boolean;
+  autoStartFocus: boolean;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  completed: boolean;
+  totalFocusSeconds: number;
+  createdAt: number;
 }
 
 export interface Session {
@@ -19,6 +31,7 @@ export interface Session {
   startedAt: number;
   endedAt: number | null;
   completed: boolean;
+  taskId?: string; // Optional link to a task
 }
 
 export interface UserStats {
@@ -39,6 +52,15 @@ interface AppState {
   // Settings
   settings: UserSettings;
   updateSettings: (newSettings: Partial<UserSettings>) => void;
+
+  // Tasks
+  tasks: Task[];
+  activeTaskId: string | null;
+  addTask: (title: string) => void;
+  toggleTask: (id: string) => void;
+  deleteTask: (id: string) => void;
+  setActiveTask: (id: string | null) => void;
+  updateTaskFocusTime: (id: string, additionalSeconds: number) => void;
 
   // Stats & Progress
   stats: UserStats;
@@ -62,6 +84,10 @@ const DEFAULT_SETTINGS: UserSettings = {
   shortBreakDuration: 5 * 60,
   longBreakDuration: 15 * 60,
   cyclesBeforeLongBreak: 4,
+  audioVolume: 0.5,
+  selectedAudio: 'none',
+  autoStartBreaks: false,
+  autoStartFocus: false,
 };
 
 const DEFAULT_STATS: UserStats = {
@@ -84,22 +110,59 @@ export const useAppStore = create<AppState>()(
       updateSettings: (newSettings) =>
         set((state) => ({ settings: { ...state.settings, ...newSettings } })),
 
+      tasks: [],
+      activeTaskId: null,
+      addTask: (title) =>
+        set((state) => ({
+          tasks: [
+            ...state.tasks,
+            { id: crypto.randomUUID(), title, completed: false, totalFocusSeconds: 0, createdAt: Date.now() },
+          ],
+        })),
+      toggleTask: (id) =>
+        set((state) => ({
+          tasks: state.tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+          activeTaskId: state.activeTaskId === id ? null : state.activeTaskId, // deselect if completed
+        })),
+      deleteTask: (id) =>
+        set((state) => ({
+          tasks: state.tasks.filter((t) => t.id !== id),
+          activeTaskId: state.activeTaskId === id ? null : state.activeTaskId,
+        })),
+      setActiveTask: (id) => set({ activeTaskId: id }),
+      updateTaskFocusTime: (id, additionalSeconds) =>
+        set((state) => ({
+          tasks: state.tasks.map((t) =>
+            t.id === id ? { ...t, totalFocusSeconds: t.totalFocusSeconds + additionalSeconds } : t
+          ),
+        })),
+
       stats: DEFAULT_STATS,
       addSession: (session) =>
         set((state) => {
           const isFocus = session.type === 'focus';
           const newTotal = state.stats.totalFocusSeconds + (isFocus ? session.actualDuration : 0);
 
-          // Simple streak logic (could be improved with date checking)
-          // Use local date string instead of UTC to avoid streak resets at wrong local time
+          // Refined streak logic using local date strings
           const now = new Date();
           const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().split('T')[0];
           let { currentStreakDays, longestStreakDays, lastActiveDate } = state.stats;
 
+          // Check if streak was broken (last active date is before yesterday)
+          if (lastActiveDate && lastActiveDate !== today) {
+              const yesterday = new Date(now.getTime() - 86400000);
+              const yesterdayStr = new Date(yesterday.getTime() - yesterday.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+
+              if (lastActiveDate !== yesterdayStr) {
+                  // Streak broken! Reset to 0 if they haven't done anything today yet,
+                  // or keep logic simple: if they log something today, it becomes 1.
+                  currentStreakDays = 0;
+              }
+          }
+
           if (isFocus && session.actualDuration > 0) {
               if (lastActiveDate !== today) {
-                  const yesterday = new Date();
-                  yesterday.setDate(yesterday.getDate() - 1);
+                  const yesterday = new Date(now.getTime() - 86400000);
                   const yesterdayStr = new Date(yesterday.getTime() - yesterday.getTimezoneOffset() * 60000).toISOString().split('T')[0];
 
                   if (lastActiveDate === yesterdayStr) {

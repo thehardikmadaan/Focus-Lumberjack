@@ -10,6 +10,8 @@ export function SettingsModal() {
   const [shortBreak, setShortBreak] = useState(settings.shortBreakDuration / 60);
   const [longBreak, setLongBreak] = useState(settings.longBreakDuration / 60);
   const [cycles, setCycles] = useState(settings.cyclesBeforeLongBreak);
+  const [autoBreak, setAutoBreak] = useState(settings.autoStartBreaks);
+  const [autoFocus, setAutoFocus] = useState(settings.autoStartFocus);
 
   const handleSave = () => {
     updateSettings({
@@ -17,6 +19,8 @@ export function SettingsModal() {
       shortBreakDuration: shortBreak * 60,
       longBreakDuration: longBreak * 60,
       cyclesBeforeLongBreak: cycles,
+      autoStartBreaks: autoBreak,
+      autoStartFocus: autoFocus,
     });
     setIsOpen(false);
   };
@@ -82,6 +86,27 @@ export function SettingsModal() {
               onChange={(e) => setCycles(Number(e.target.value))}
               className="w-full px-3 py-2 border-2 border-storybook-forest-dark bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-storybook-rust-base font-bold text-storybook-forest-base"
             />
+          </div>
+
+          <div className="pt-2 border-t-2 border-storybook-forest-dark/10 space-y-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={autoBreak}
+                onChange={(e) => setAutoBreak(e.target.checked)}
+                className="w-4 h-4 text-storybook-rust-base border-storybook-forest-dark rounded focus:ring-storybook-rust-base"
+              />
+              <span className="text-sm font-bold text-storybook-forest-dark">Auto-start Breaks</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={autoFocus}
+                onChange={(e) => setAutoFocus(e.target.checked)}
+                className="w-4 h-4 text-storybook-rust-base border-storybook-forest-dark rounded focus:ring-storybook-rust-base"
+              />
+              <span className="text-sm font-bold text-storybook-forest-dark">Auto-start Focus</span>
+            </label>
           </div>
         </div>
 

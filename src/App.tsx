@@ -3,6 +3,8 @@ import { TimerControls } from './components/TimerControls';
 import { SettingsModal } from './components/SettingsModal';
 import { AuthNav } from './components/AuthNav';
 import { StatsDashboard } from './components/StatsDashboard';
+import { TaskManager } from './components/TaskManager';
+import { AudioPlayer } from './components/AudioPlayer';
 import { useAppStore } from './store/useAppStore';
 
 function App() {
@@ -13,8 +15,9 @@ function App() {
       <AuthNav />
 
       <main className="px-4 flex flex-col items-center">
-        {/* Top Controls (Settings) */}
-        <div className="w-full max-w-lg flex justify-end mb-4">
+        {/* Top Controls (Audio & Settings) */}
+        <div className="w-full max-w-lg flex justify-between items-center mb-4">
+          <AudioPlayer />
           <SettingsModal />
         </div>
 
@@ -23,6 +26,9 @@ function App() {
 
         {/* Core Timer UI */}
         <TimerControls />
+
+        {/* Tasks */}
+        <TaskManager />
 
         {/* Stats */}
         <StatsDashboard />

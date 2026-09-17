@@ -1,5 +1,6 @@
 import { useTimer } from '../lib/useTimer';
 import { Play, Pause, Square, SkipForward } from 'lucide-react';
+import { PipButton } from './PipButton';
 
 export function TimerControls() {
   const {
@@ -24,7 +25,8 @@ export function TimerControls() {
   };
 
   return (
-    <div className="flex flex-col items-center bg-amber-50/80 backdrop-blur p-6 rounded-2xl shadow-sm border-2 border-storybook-forest-dark mt-6 w-full max-w-lg mx-auto">
+    <div className="relative flex flex-col items-center bg-amber-50/80 backdrop-blur p-6 rounded-2xl shadow-sm border-2 border-storybook-forest-dark mt-6 w-full max-w-lg mx-auto">
+      <PipButton />
       <div className="text-sm font-bold text-storybook-rust-base uppercase tracking-wider mb-2">
         {phaseLabels[timerPhase]} • Cycle {currentCycle}
       </div>
