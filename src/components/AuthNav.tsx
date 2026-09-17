@@ -18,8 +18,8 @@ export function AuthNav() {
 
   return (
     <nav className="flex justify-between items-center py-4 px-6 mb-8 w-full max-w-4xl mx-auto">
-      <div className="flex items-center gap-2 text-emerald-800 font-black text-xl tracking-tight">
-        <Trees className="w-6 h-6" />
+      <div className="flex items-center gap-2 text-storybook-forest-dark font-black text-xl tracking-tight drop-shadow-sm">
+        <Trees className="w-6 h-6 text-storybook-forest-base" />
         <span>Focus Lumberjack</span>
       </div>
 
@@ -27,19 +27,19 @@ export function AuthNav() {
         {isGuest ? (
           <button
             onClick={() => setShowLogin(true)}
-            className="flex items-center gap-2 text-sm font-semibold text-emerald-700 bg-emerald-100 hover:bg-emerald-200 px-4 py-2 rounded-full transition-colors"
+            className="flex items-center gap-2 text-sm font-bold text-storybook-forest-dark bg-amber-200 hover:bg-amber-300 px-4 py-2 rounded-full transition-colors border-2 border-storybook-forest-dark shadow-sm"
           >
             <User className="w-4 h-4" />
             Sign In
           </button>
         ) : (
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-slate-600">
-              Welcome, <strong className="text-slate-900">{username}</strong>
+          <div className="flex items-center gap-4 bg-amber-100/80 px-4 py-2 rounded-full border-2 border-storybook-forest-dark shadow-sm backdrop-blur">
+            <span className="text-sm font-medium text-storybook-forest-base">
+              Welcome, <strong className="text-storybook-forest-dark font-black">{username}</strong>
             </span>
             <button
               onClick={logout}
-              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+              className="p-1.5 text-storybook-rust-base hover:text-white hover:bg-storybook-rust-base rounded-full transition-colors border-2 border-transparent hover:border-storybook-forest-dark"
               title="Log out"
             >
               <LogOut className="w-4 h-4" />
@@ -49,10 +49,10 @@ export function AuthNav() {
       </div>
 
       {showLogin && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6">
-            <h2 className="text-xl font-bold text-slate-800 mb-2">Join the Crew</h2>
-            <p className="text-slate-500 text-sm mb-6">Enter a name to save your progress (Mock Auth for MVP).</p>
+        <div className="fixed inset-0 bg-storybook-forest-dark/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-amber-50 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 border-4 border-storybook-forest-dark">
+            <h2 className="text-xl font-black text-storybook-forest-dark mb-2">Join the Crew</h2>
+            <p className="text-storybook-teal-base font-medium text-sm mb-6">Enter a name to save your progress (Mock Auth for MVP).</p>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <input
@@ -61,19 +61,19 @@ export function AuthNav() {
                 value={inputName}
                 onChange={(e) => setInputName(e.target.value)}
                 autoFocus
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                className="w-full px-4 py-3 border-2 border-storybook-forest-dark bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-storybook-rust-base font-bold text-storybook-forest-base"
               />
-              <div className="flex gap-2 justify-end">
+              <div className="flex gap-2 justify-end pt-2">
                 <button
                   type="button"
                   onClick={() => setShowLogin(false)}
-                  className="px-4 py-2 text-slate-500 font-medium hover:bg-slate-100 rounded-lg"
+                  className="px-4 py-2 text-storybook-forest-base font-bold hover:bg-amber-200 rounded-lg border-2 border-transparent hover:border-storybook-forest-dark transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+                  className="px-4 py-2 bg-storybook-forest-base text-amber-50 font-bold rounded-lg hover:bg-storybook-forest-light transition-colors border-2 border-storybook-forest-dark shadow-sm"
                 >
                   Sign In
                 </button>

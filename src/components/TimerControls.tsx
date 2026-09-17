@@ -24,12 +24,12 @@ export function TimerControls() {
   };
 
   return (
-    <div className="flex flex-col items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mt-6 w-full max-w-lg mx-auto">
-      <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">
+    <div className="flex flex-col items-center bg-amber-50/80 backdrop-blur p-6 rounded-2xl shadow-sm border-2 border-storybook-forest-dark mt-6 w-full max-w-lg mx-auto">
+      <div className="text-sm font-bold text-storybook-rust-base uppercase tracking-wider mb-2">
         {phaseLabels[timerPhase]} • Cycle {currentCycle}
       </div>
 
-      <div className="text-6xl font-black text-slate-800 tabular-nums tracking-tighter mb-8">
+      <div className="text-6xl font-black text-storybook-forest-dark tabular-nums tracking-tighter mb-8 drop-shadow-sm">
         {timeString}
       </div>
 
@@ -37,7 +37,7 @@ export function TimerControls() {
         {timerStatus !== 'running' ? (
           <button
             onClick={startTimer}
-            className="flex items-center justify-center w-16 h-16 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 active:scale-95 transition-all shadow-md"
+            className="flex items-center justify-center w-16 h-16 bg-storybook-forest-base text-amber-50 rounded-full hover:bg-storybook-forest-light active:scale-95 transition-all shadow-md border-2 border-storybook-forest-dark"
             aria-label="Start Timer"
           >
             <Play className="w-8 h-8 ml-1" fill="currentColor" />
@@ -45,7 +45,7 @@ export function TimerControls() {
         ) : (
           <button
             onClick={pauseTimer}
-            className="flex items-center justify-center w-16 h-16 bg-amber-500 text-white rounded-full hover:bg-amber-600 active:scale-95 transition-all shadow-md"
+            className="flex items-center justify-center w-16 h-16 bg-storybook-rust-base text-amber-50 rounded-full hover:bg-storybook-rust-light active:scale-95 transition-all shadow-md border-2 border-storybook-forest-dark"
             aria-label="Pause Timer"
           >
             <Pause className="w-8 h-8" fill="currentColor" />
@@ -55,7 +55,7 @@ export function TimerControls() {
         {timerStatus !== 'idle' && (
            <button
             onClick={stopTimer}
-            className="flex items-center justify-center w-12 h-12 bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 active:scale-95 transition-all"
+            className="flex items-center justify-center w-12 h-12 bg-storybook-teal-light text-amber-50 rounded-full hover:bg-storybook-teal-base active:scale-95 transition-all border-2 border-storybook-forest-dark"
             aria-label="Stop Timer"
           >
             <Square className="w-5 h-5" fill="currentColor" />
@@ -64,7 +64,7 @@ export function TimerControls() {
 
         <button
           onClick={skipPhase}
-          className="flex items-center justify-center w-12 h-12 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-200 active:scale-95 transition-all"
+          className="flex items-center justify-center w-12 h-12 bg-amber-200 text-storybook-forest-dark rounded-full hover:bg-amber-300 active:scale-95 transition-all border-2 border-storybook-forest-dark"
           aria-label="Skip Phase"
         >
           <SkipForward className="w-5 h-5" />

@@ -12,117 +12,105 @@ export function Scene({ status, phase }: SceneProps) {
   const isPaused = status === 'paused';
   const isResting = !isFocusing;
 
-  return (
-    <div className="relative w-full max-w-lg aspect-video bg-sky-100 rounded-xl overflow-hidden border-4 border-sky-900 shadow-xl mx-auto flex items-end justify-center">
-      {/* Ground */}
-      <div className="absolute bottom-0 w-full h-1/3 bg-emerald-600 border-t-4 border-emerald-800" />
+  // Base background class determined by phase
+  const backgroundClass = isFocusing ? 'bg-dusk-gradient' : 'bg-night-gradient';
 
-      {/* Mountains (Background) */}
-      <div className="absolute bottom-1/3 left-4 w-32 h-32 bg-slate-300 rounded-tl-full rotate-45 transform translate-y-16 -z-10 border-t-2 border-l-2 border-slate-400" />
-      <div className="absolute bottom-1/3 right-12 w-40 h-40 bg-slate-400 rounded-tl-full rotate-45 transform translate-y-20 -z-10 border-t-2 border-l-2 border-slate-500" />
+  return (
+    <div className={`relative w-full max-w-lg aspect-video ${backgroundClass} rounded-xl overflow-hidden border-4 border-storybook-forest-dark shadow-xl mx-auto flex items-end justify-center transition-colors duration-1000`}>
+
+      {/* Background Placeholders (Replace with AI vectors later) */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        {/* Placeholder for noise/grain texture */}
+        <div className="w-full h-full" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")', opacity: 0.15 }} />
+      </div>
+
+      {/* Distant Trees/Mountains Silhouette (Focus) */}
+      {isFocusing && (
+        <div className="absolute bottom-1/4 w-full flex justify-around opacity-40">
+           <div className="w-0 h-0 border-l-[40px] border-l-transparent border-b-[80px] border-b-storybook-forest-dark border-r-[40px] border-r-transparent" />
+           <div className="w-0 h-0 border-l-[60px] border-l-transparent border-b-[120px] border-b-storybook-forest-dark border-r-[60px] border-r-transparent -ml-10" />
+           <div className="w-0 h-0 border-l-[50px] border-l-transparent border-b-[100px] border-b-storybook-forest-dark border-r-[50px] border-r-transparent" />
+        </div>
+      )}
 
       {/* Sun/Moon */}
-      <div className={`absolute top-6 right-8 w-12 h-12 rounded-full transition-colors duration-1000 ${isResting ? 'bg-slate-200 shadow-[0_0_20px_rgba(255,255,255,0.5)]' : 'bg-yellow-400 shadow-[0_0_30px_rgba(250,204,21,0.6)]'}`} />
+      <div className={`absolute top-6 right-8 w-12 h-12 rounded-full transition-all duration-1000 ${isResting ? 'bg-slate-200 shadow-[0_0_20px_rgba(255,255,255,0.4)] translate-y-4' : 'bg-storybook-ochre shadow-[0_0_40px_rgba(217,160,91,0.6)]'}`} />
 
-      {/* Cloud 1 */}
-      <svg className="absolute top-8 left-10 w-24 h-12 opacity-80 animate-[bounce_10s_infinite_alternate]" viewBox="0 0 24 12" fill="white">
-        <path d="M18.5,4A3.5,3.5,0,0,0,15,6.5a4.5,4.5,0,0,0-8,0A3.5,3.5,0,0,0,3.5,10h15a2.5,2.5,0,0,0,0-6Z" />
-      </svg>
-      {/* Cloud 2 */}
-       <svg className="absolute top-16 left-1/2 w-16 h-8 opacity-60 animate-[bounce_12s_infinite_alternate-reverse]" viewBox="0 0 24 12" fill="white">
-        <path d="M18.5,4A3.5,3.5,0,0,0,15,6.5a4.5,4.5,0,0,0-8,0A3.5,3.5,0,0,0,3.5,10h15a2.5,2.5,0,0,0,0-6Z" />
-      </svg>
+      {/* Ground/Forest Floor */}
+      <div className={`absolute bottom-0 w-full h-1/4 ${isFocusing ? 'bg-storybook-forest-base' : 'bg-storybook-teal-dark'} border-t-2 ${isFocusing ? 'border-storybook-forest-light' : 'border-storybook-teal-base'} transition-colors duration-1000`} />
 
-      <div className="relative z-10 flex items-end justify-center w-full h-full pb-8">
+      <div className="relative z-10 flex items-end justify-center w-full h-full pb-6">
 
-        {/* Tree (Only shows if focusing or paused) */}
+        {/* --- Environmental Props Placeholder --- */}
         {isFocusing && (
-          <div className="relative mr-4">
-             {/* Leaves */}
-             <div className="absolute -top-16 -left-6 w-24 h-24 bg-green-700 rounded-full z-10 border-4 border-green-900" />
-             <div className="absolute -top-20 left-2 w-20 h-20 bg-green-600 rounded-full z-10 border-4 border-green-900" />
-             <div className="absolute -top-12 left-6 w-24 h-24 bg-green-800 rounded-full z-10 border-4 border-green-900" />
-             {/* Trunk */}
-             <div className="w-10 h-32 bg-amber-800 border-x-4 border-amber-950 rounded-t-sm" />
-
+          <div className="relative mr-8">
+             {/* Standing Tree Placeholder (Replace with 'Standing tree' vector) */}
+             {/* Using simple shapes to represent the asset for now */}
+             <div className="w-12 h-32 bg-storybook-wood border-x-2 border-storybook-forest-dark rounded-t-sm relative">
+                <div className="absolute -top-16 -left-8 w-28 h-28 bg-storybook-forest-base rounded-full z-10 opacity-90 border-b-4 border-storybook-forest-dark" />
+             </div>
              {/* Axe hit effect */}
              {isChopping && (
-               <div className="absolute top-1/2 -left-2 w-4 h-1 bg-yellow-300 rounded animate-[ping_1s_infinite]" />
+               <div className="absolute top-1/2 -left-2 w-4 h-1 bg-storybook-ochre rounded animate-[ping_1s_infinite]" />
              )}
           </div>
         )}
 
-        {/* Campfire (Only shows if resting) */}
         {isResting && (
-          <div className="relative mr-8 bottom-0 flex flex-col items-center">
-            {/* Flames */}
-            <div className="relative w-12 h-16 flex justify-center items-end">
-                <div className="absolute bottom-2 w-6 h-12 bg-orange-500 rounded-full animate-[pulse_0.5s_infinite_alternate] opacity-80 mix-blend-screen transform scale-y-110 blur-sm" />
-                <div className="absolute bottom-2 w-4 h-10 bg-yellow-400 rounded-full animate-[pulse_0.3s_infinite_alternate-reverse] opacity-90 mix-blend-screen" />
-                <div className="absolute bottom-2 w-2 h-6 bg-white rounded-full animate-[pulse_0.2s_infinite_alternate]" />
+          <div className="relative mr-12 bottom-0 flex flex-col items-center">
+            {/* Campfire Placeholder (Replace with 'Campfire' vector) */}
+             <div className="relative w-16 h-16 flex justify-center items-end">
+                <div className="absolute bottom-2 w-8 h-14 bg-storybook-rust-light rounded-full animate-[pulse_0.5s_infinite_alternate] opacity-80 mix-blend-screen transform scale-y-110 blur-sm" />
+                <div className="absolute bottom-2 w-6 h-10 bg-storybook-ochre rounded-full animate-[pulse_0.3s_infinite_alternate-reverse] opacity-90 mix-blend-screen" />
+                <div className="absolute bottom-2 w-3 h-6 bg-white rounded-full animate-[pulse_0.2s_infinite_alternate]" />
             </div>
-            {/* Logs */}
-            <div className="flex -mt-2">
-                <div className="w-10 h-3 bg-amber-900 rounded-full rotate-12 -mr-4 border border-black" />
-                <div className="w-10 h-3 bg-amber-900 rounded-full -rotate-12 border border-black" />
-            </div>
+            <div className="w-16 h-4 bg-storybook-wood rounded-full border border-storybook-forest-dark -mt-2 shadow-lg" />
           </div>
         )}
 
 
-        {/* Lumberjack */}
-        <div className="relative">
-          {/* Head */}
-          <div className="w-12 h-12 bg-orange-200 rounded-md border-2 border-black relative z-20 overflow-hidden">
-             {/* Beanie */}
-             <div className="absolute top-0 w-full h-4 bg-red-600 border-b-2 border-black" />
-             {/* Beard */}
-             <div className="absolute bottom-0 w-full h-5 bg-amber-900" />
-             {/* Eyes */}
-             <div className={`absolute top-5 left-3 w-1.5 h-1.5 bg-black rounded-full ${isResting ? 'animate-pulse' : ''}`} />
-             <div className={`absolute top-5 right-3 w-1.5 h-1.5 bg-black rounded-full ${isResting ? 'animate-pulse' : ''}`} />
-          </div>
+        {/* --- Character Sprites Placeholder --- */}
+        {/*
+            When swapping to real assets, this entire div tree will be replaced by something like:
+            <img src={getCharacterStateImage()} className="w-32 h-32 object-contain drop-shadow-xl" />
+        */}
+        <div className="relative w-24 h-32 flex flex-col items-center justify-end">
 
-          {/* Body */}
-          <div className="w-14 h-16 bg-red-600 border-2 border-black -ml-1 relative z-10 overflow-hidden mt-1">
-             {/* Flannel pattern (simple grid) */}
-             <div className="w-full h-full" style={{ backgroundImage: 'linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.2) 50%), linear-gradient(rgba(0,0,0,0.2) 50%, transparent 50%)', backgroundSize: '8px 8px' }} />
+          {/* Base Character Block (Simple rounded silhouette placeholder) */}
+          <div className="w-16 h-20 bg-storybook-rust-base rounded-t-2xl rounded-b-md border-2 border-storybook-forest-dark relative z-10 shadow-lg flex flex-col items-center">
+             {/* Head area */}
+             <div className="w-12 h-10 mt-1 bg-amber-100 rounded-full border border-storybook-forest-dark relative overflow-hidden">
+                {/* Beanie placeholder */}
+                <div className="absolute top-0 w-full h-4 bg-storybook-forest-base" />
+             </div>
+
+             {/* State-specific overlays */}
+             {isChopping && (
+                 <div className="absolute top-10 -left-6 origin-bottom-right z-30 animate-[spin_1s_infinite_linear]" style={{ animation: 'chop 1s infinite' }}>
+                    <div className="w-16 h-2 bg-storybook-wood border border-storybook-forest-dark rotate-[-45deg] origin-right" />
+                    <div className="absolute -top-2 -left-2 w-6 h-6 bg-slate-300 rounded-sm rotate-[-45deg]" />
+                 </div>
+             )}
+
+             {isPaused && (
+                 <div className="absolute top-10 left-0 z-30">
+                    <div className="w-2 h-16 bg-storybook-wood border border-storybook-forest-dark" />
+                 </div>
+             )}
+
+             {isResting && (
+                 <div className="absolute top-12 left-2 z-30">
+                     {/* Resting arms placeholder */}
+                    <div className="w-8 h-4 bg-storybook-rust-light rounded-full" />
+                 </div>
+             )}
           </div>
 
           {/* Legs */}
-          <div className="flex justify-between w-12 ml-0 mt-0">
-             <div className="w-5 h-8 bg-blue-800 border-2 border-t-0 border-black" />
-             <div className="w-5 h-8 bg-blue-800 border-2 border-t-0 border-black" />
+          <div className="flex justify-between w-12 mt-0">
+             <div className="w-5 h-8 bg-storybook-teal-base border-2 border-t-0 border-storybook-forest-dark" />
+             <div className="w-5 h-8 bg-storybook-teal-base border-2 border-t-0 border-storybook-forest-dark" />
           </div>
-
-          {/* Boots */}
-          <div className="flex justify-between w-14 -ml-1 mt-0">
-             <div className="w-6 h-4 bg-amber-950 border-2 border-black rounded-t-md" />
-             <div className="w-6 h-4 bg-amber-950 border-2 border-black rounded-t-md" />
-          </div>
-
-          {/* Arms and Axe */}
-          {isFocusing && (
-             <div className={`absolute top-16 left-[-2rem] origin-bottom-right z-30 transition-transform ${isChopping ? 'animate-[spin_1s_infinite_linear]' : isPaused ? 'rotate-[45deg]' : 'rotate-[20deg]'}`} style={isChopping ? { animation: 'chop 1s infinite' } : {}}>
-                {/* Arm */}
-                <div className="w-12 h-4 bg-red-600 border-2 border-black rounded-full relative">
-                   <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.2) 50%), linear-gradient(rgba(0,0,0,0.2) 50%, transparent 50%)', backgroundSize: '8px 8px' }} />
-                </div>
-                {/* Axe handle */}
-                <div className="absolute top-2 -left-6 w-16 h-2 bg-amber-700 border-2 border-black rotate-[-45deg] origin-right" />
-                {/* Axe Head */}
-                <div className="absolute -top-2 -left-8 w-6 h-8 bg-slate-300 border-2 border-black rounded-l-full rotate-[-45deg]" />
-             </div>
-          )}
-
-           {isResting && (
-             <div className="absolute top-16 left-2 origin-top z-30 rotate-12">
-                {/* Arm resting */}
-                <div className="w-4 h-10 bg-red-600 border-2 border-black rounded-full relative">
-                   <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.2) 50%), linear-gradient(rgba(0,0,0,0.2) 50%, transparent 50%)', backgroundSize: '8px 8px' }} />
-                </div>
-             </div>
-          )}
         </div>
       </div>
 

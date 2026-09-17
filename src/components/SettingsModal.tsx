@@ -25,7 +25,7 @@ export function SettingsModal() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors"
+        className="p-2 text-storybook-forest-base hover:text-storybook-forest-dark hover:bg-amber-100 rounded-full transition-colors border-2 border-transparent hover:border-storybook-forest-dark"
       >
         <Settings className="w-5 h-5" />
       </button>
@@ -33,62 +33,62 @@ export function SettingsModal() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl">
-        <div className="flex justify-between items-center p-4 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-800">Settings</h2>
-          <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-slate-100 rounded-full text-slate-500">
+    <div className="fixed inset-0 bg-storybook-forest-dark/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div className="bg-amber-50 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl border-4 border-storybook-forest-dark">
+        <div className="flex justify-between items-center p-4 border-b-2 border-storybook-forest-dark bg-amber-100/50">
+          <h2 className="text-lg font-bold text-storybook-forest-dark">Settings</h2>
+          <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-amber-200 rounded-full text-storybook-forest-base border-2 border-transparent hover:border-storybook-forest-dark transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Focus (minutes)</label>
+            <label className="block text-sm font-bold text-storybook-forest-dark mb-1">Focus (minutes)</label>
             <input
               type="number"
               min="1"
               value={focus}
               onChange={(e) => setFocus(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-3 py-2 border-2 border-storybook-forest-dark bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-storybook-rust-base font-bold text-storybook-forest-base"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Short Break (minutes)</label>
+            <label className="block text-sm font-bold text-storybook-forest-dark mb-1">Short Break (minutes)</label>
             <input
               type="number"
               min="1"
               value={shortBreak}
               onChange={(e) => setShortBreak(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-3 py-2 border-2 border-storybook-forest-dark bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-storybook-rust-base font-bold text-storybook-forest-base"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Long Break (minutes)</label>
+            <label className="block text-sm font-bold text-storybook-forest-dark mb-1">Long Break (minutes)</label>
             <input
               type="number"
               min="1"
               value={longBreak}
               onChange={(e) => setLongBreak(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-3 py-2 border-2 border-storybook-forest-dark bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-storybook-rust-base font-bold text-storybook-forest-base"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Cycles before Long Break</label>
+            <label className="block text-sm font-bold text-storybook-forest-dark mb-1">Cycles before Long Break</label>
             <input
               type="number"
               min="1"
               value={cycles}
               onChange={(e) => setCycles(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-3 py-2 border-2 border-storybook-forest-dark bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-storybook-rust-base font-bold text-storybook-forest-base"
             />
           </div>
         </div>
 
-        <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <div className="p-4 bg-amber-100/50 border-t-2 border-storybook-forest-dark flex justify-end">
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+            className="px-4 py-2 bg-storybook-forest-base text-amber-50 font-bold rounded-lg hover:bg-storybook-forest-light transition-colors border-2 border-storybook-forest-dark"
           >
             Save Changes
           </button>

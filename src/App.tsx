@@ -9,7 +9,7 @@ function App() {
   const { timerStatus, timerPhase } = useAppStore();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans pb-20">
+    <div className="min-h-screen bg-amber-50 text-storybook-forest-dark font-sans pb-20">
       <AuthNav />
 
       <main className="px-4 flex flex-col items-center">
