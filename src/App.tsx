@@ -26,16 +26,18 @@ function App() {
 
         <main className="px-4 flex flex-col items-center">
         {/* Top Controls (Audio & Settings) */}
-        <div className="w-full max-w-lg flex justify-between items-center mb-4">
+        <div className="w-full max-w-lg flex justify-between items-center mb-2">
           <AudioPlayer />
           <SettingsModal />
         </div>
 
+        {/* Core Timer UI - Floats in the sky above the animation */}
+        <div className="w-full max-w-lg -mb-8 z-20 relative">
+          <TimerControls />
+        </div>
+
         {/* Visualizer */}
         <Scene status={timerStatus} phase={timerPhase} />
-
-        {/* Core Timer UI */}
-        <TimerControls />
 
         {/* Tasks */}
         <TaskManager />

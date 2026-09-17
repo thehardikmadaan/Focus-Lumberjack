@@ -35,10 +35,12 @@ export function Scene({ status, phase }: SceneProps) {
   const stage = getStage();
 
   const getCharacterSprite = () => {
+    // We'll use the 'chop-strike.svg' as the base for the smooth animation
+    // because it has the arms extended, making it easier to rotate cleanly.
     if (isResting) return '/assets/Character/idle.svg';
     if (isPaused) return '/assets/Character/idle.svg';
     if (isFocusing && !isChopping) return '/assets/Character/idle.svg';
-    return null; // CSS animation handles the chopping state
+    return '/assets/Character/chop-strike.svg';
   };
 
   return (
@@ -58,10 +60,10 @@ export function Scene({ status, phase }: SceneProps) {
         {/* Environmental Props */}
         {isFocusing && (
           <div className="relative mr-8">
-             <img src="/assets/standing-tree.svg" className="w-40 h-auto drop-shadow-xl" alt="Target Tree" />
+             <img src="/assets/standing-tree.svg" className="w-40 h-auto drop-shadow-xl z-20 relative" alt="Target Tree" />
              {/* Axe hit effect overlay */}
              {isChopping && (
-               <div className="absolute top-1/2 left-4 w-4 h-1 bg-storybook-ochre rounded animate-[ping_1s_infinite]" />
+               <div className="absolute top-[40%] left-6 w-8 h-2 bg-white/80 rounded animate-[ping_1s_infinite_ease-out] z-30 mix-blend-overlay" />
              )}
           </div>
         )}
@@ -73,27 +75,29 @@ export function Scene({ status, phase }: SceneProps) {
         )}
 
         {/* Character Sprite Render */}
-        <div className="relative w-40 h-40 flex flex-col items-center justify-end -ml-4">
-            {isChopping ? (
-                // CSS toggle for chopping animation frames
-                <div className="w-full h-full relative">
-                    <img src="/assets/Character/chop-windup.svg" className="absolute inset-0 w-full h-full object-contain animate-[chopFrame_1s_steps(1,end)_infinite]" />
-                    <img src="/assets/Character/chop-strike.svg" className="absolute inset-0 w-full h-full object-contain opacity-0 animate-[chopFrameStrike_1s_steps(1,end)_infinite]" />
-                </div>
-            ) : (
-                <img src={getCharacterSprite()!} className="w-full h-full object-contain drop-shadow-xl" alt="Lumberjack" />
-            )}
+        <div className="relative w-40 h-40 flex flex-col items-center justify-end -ml-4 z-30">
+            <img
+              src={getCharacterSprite()!}
+              className={`w-full h-full object-contain drop-shadow-xl origin-[50%_80%] ${isChopping ? 'animate-[smoothSwing_1.2s_ease-in-out_infinite]' : ''}`}
+              alt="Lumberjack"
+            />
         </div>
       </div>
 
       <style>{`
-        @keyframes chopFrame {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-        @keyframes chopFrameStrike {
-          0%, 100% { opacity: 0; }
-          50% { opacity: 1; }
+        @keyframes smoothSwing {
+          /* Physics-based swing:
+             0% - Rest/start
+             30% - Wind up (pull back slowly)
+             45% - Strike (fast downward arc)
+             55% - Recoil (bounce off wood)
+             100% - Recover back to start
+          */
+          0% { transform: rotate(0deg) translateX(0px); }
+          30% { transform: rotate(25deg) translateX(10px) translateY(-5px); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+          45% { transform: rotate(-15deg) translateX(-15px) translateY(5px); animation-timing-function: ease-out; }
+          55% { transform: rotate(-5deg) translateX(-5px) translateY(2px); animation-timing-function: ease-in-out; }
+          100% { transform: rotate(0deg) translateX(0px); }
         }
       `}</style>
     </div>
